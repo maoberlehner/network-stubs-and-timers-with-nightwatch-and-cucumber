@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Network Stubs and Timers with Nightwatch.js and Cucumber.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="container js-container">
+      <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Lorem Ipsum</h1>
+        <p class="lead">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
+      </div>
+
+      <ul class="list-group js-post-list" data-qa="list of posts"></ul>
+
+      <div class="card mt-5" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">New User</h5>
+          <p class="card-text">Create a new user please.</p>
+          <button class="btn btn-primary js-new-user" data-qa="create user button">Ok</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const $container = document.querySelector(`.js-container`);
+      const $postList = document.querySelector(`.js-post-list`);
+      const $createButton = document.querySelector(`.js-new-user`);
+
+      axios.get(`https://jsonplaceholder.typicode.com/posts`).then(({ data }) => {
+        data.slice(0, 3).forEach((post) => {
+          const titleText = document.createTextNode(post.title);
+          const title = document.createElement(`span`);
+          const li = document.createElement(`li`);
+
+          title.dataset.qa = `title`;
+          title.appendChild(titleText);
+          li.classList.add(`list-group-item`);
+          li.appendChild(title);
+
+          $postList.appendChild(li);
+        });
+
+        $postList.querySelector(`:first-child`).dataset.qa = `first post`;
+      });
+
+      $createButton.addEventListener(`click`, () => {
+        axios.post(`https://jsonplaceholder.typicode.com/users`).then(({ data }) => {
+          const alertText = document.createTextNode(`Hello ${data.name}!`);
+          const alert = document.createElement(`div`);
+
+          alert.classList.add(`alert`, `alert-success`, `mt-3`);
+          alert.dataset.qa = `user greeting`;
+          alert.appendChild(alertText);
+
+          $container.insertAdjacentElement(`afterbegin`, alert);
+
+          setTimeout(() => alert.remove(), 4000);
+        });
+      });
+    </script>
+  </body>
+</html>
