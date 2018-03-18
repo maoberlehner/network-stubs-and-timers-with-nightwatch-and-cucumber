@@ -17,6 +17,8 @@ function addNetworkStub({
   ]);
 }
 
+// We use the `sessionStorage` in order to make it
+// possible to queue stubs in Nightwatch.js
 const queuedStubs = sessionStorage.getItem(IDENTIFIERS.networkStubs);
 
 if (queuedStubs) {

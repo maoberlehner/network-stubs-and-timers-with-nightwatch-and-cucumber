@@ -14,51 +14,60 @@ const {
 let cookies = [];
 let networkStubs = [];
 
-Given(/^network stubs are enabled$/, () => client.url(({ value }) => {
+Given(/^time traveling is enabled$/, () => {
+  const cookie = {
+    name: IDENTIFIERS.timers,
+    value: `1`,
+  };
+
+  return cookies.push(cookie);
+});
+
+Given(/^"(.*)" seconds have passed$/, (seconds) => {
+  client.execute(`clock.tick(${seconds} * 1000)`);
+});
+
+Given(/^network stubs are enabled$/, () => {
   const cookie = {
     name: IDENTIFIERS.network,
     value: `1`,
   };
 
-  if (pageLoaded(value)) return client.setCookie(cookie);
-
   return cookies.push(cookie);
-}));
+});
 
+// Changing the request type from `GET`
+// to `POST` is possible by adding the
+// phrase `when sending data` when using
+// this step definition.
 Given(/^the endpoint "(.*?)" returns.*? `(.*?)`( when sending data)?$/, (endpoint, name, post) => {
   const type = post === undefined ? `GET` : `POST`;
 
   return client.url(({ value }) => {
     const networkStub = {
+      // The `resolveMockFile()` function
+      // tries to find a `.json` file in the
+      // `test/mocks` directory, which matches
+      // the given name.
       body: resolveMockFile({ endpoint, name }),
       endpoint,
       type,
     };
 
+    // Execute the `addNetworkStub()` function
+    // immediately if a page was already loaded.
     if (pageLoaded(value)) return client.execute(`addNetworkStub(${JSON.stringify(networkStub)})`);
 
     return networkStubs.push(networkStub);
   });
 });
 
-Given(/^time traveling is enabled$/, () => client.url(({ value }) => {
-  const cookie = {
-    name: IDENTIFIERS.timers,
-    value: `1`,
-  };
-
-  if (pageLoaded(value)) return client.setCookie(cookie);
-
-  return cookies.push(cookie);
-}));
-
-Given(/^"(.*)" seconds have passed$/, (seconds) => {
-  client.execute(`clock.tick(${seconds} * 1000)`);
-});
-
 When(/^I (?:browse|open|visit).*? `(.*?)`$/, (pageName) => {
   const refresh = cookies.length || networkStubs.length;
 
+  // Initially load the page so we
+  // are able to set cookies and use
+  // the session storage.
   client.url(pages[pageName]);
 
   if (networkStubs.length) {
@@ -66,8 +75,12 @@ When(/^I (?:browse|open|visit).*? `(.*?)`$/, (pageName) => {
     networkStubs = [];
   }
 
+  // Set the cookies we've prepared
+  // and clear the queue.
   cookies = cookies.filter(x => !client.setCookie(x));
 
+  // We have to refresh the page so
+  // cookies are sent correctly.
   if (refresh) client.refresh();
 });
 
