@@ -84,19 +84,13 @@ When(/^I (?:browse|open|visit).*? `(.*?)`$/, (pageName) => {
   if (refresh) client.refresh();
 });
 
-When(/^I click.*? (`.*`)$/, (selectorChain) => {
-  client.click(nestedSelector(selectorChain));
-});
+When(/^I click.*? (`.*`)$/, selectorChain => client.click(nestedSelector(selectorChain)));
 
-Then(/^I expect.*? (`.*`).*? to be visible$/, (selectorChain) => {
-  client.expect.element(nestedSelector(selectorChain)).to.be.visible.before(DEFAULT_WAIT);
-});
+Then(/^I expect.*? (`.*`).*? to be visible$/, selectorChain =>
+  client.expect.element(nestedSelector(selectorChain)).to.be.visible.before(DEFAULT_WAIT));
 
-Then(/^I expect.*? (`.*`).*? to not be present$/, (selectorChain) => {
-  // eslint-disable-next-line no-unused-expressions
-  client.expect.element(nestedSelector(selectorChain)).to.not.be.present;
-});
+Then(/^I expect.*? (`.*`).*? to not be present$/, selectorChain =>
+  client.expect.element(nestedSelector(selectorChain)).to.not.be.present);
 
-Then(/^I expect.*? (`.*`).*? to contain the text "(.*?)"$/, (selectorChain, text) => {
-  client.expect.element(nestedSelector(selectorChain)).text.to.equal(text).before(DEFAULT_WAIT);
-});
+Then(/^I expect.*? (`.*`).*? to contain the text "(.*?)"$/, (selectorChain, text) =>
+  client.expect.element(nestedSelector(selectorChain)).text.to.equal(text).before(DEFAULT_WAIT));
