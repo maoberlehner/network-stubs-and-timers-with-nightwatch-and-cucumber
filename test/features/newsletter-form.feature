@@ -1,6 +1,6 @@
 Feature: Newsletter Form
 
-Scenario: It should render a list of posts
+Scenario: Render a list of posts
 
   Given network stubs are enabled
   # If the XHR request is triggered immediately after the page
@@ -11,7 +11,7 @@ Scenario: It should render a list of posts
   Then I expect a `list of posts` to be visible
   And I expect the `first post` `title` to contain the text "First Post"
 
-Scenario: It should greet a new user
+Scenario: Greet new user
 
   Given network stubs are enabled
   And time traveling is enabled
