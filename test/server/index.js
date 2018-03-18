@@ -6,8 +6,7 @@ const cookieParser = require(`cookie-parser`);
 const fs = require(`fs`);
 const path = require(`path`);
 
-const { IDENTIFIERS } = require(`../conf`);
-const PORT = 8080;
+const { IDENTIFIERS, PORT } = require(`../conf`);
 
 const rootPath = path.resolve(__dirname, `..`, `..`);
 const publicPath = path.join(rootPath, `public`);
