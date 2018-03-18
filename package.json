@@ -7,7 +7,7 @@
   "scripts": {
     "init": "npm run test:build",
     "lint": "eslint --ignore-path .gitignore .",
-    "test:build": "rollup test/server/src/network-stubs.js --o public/dist/network-stubs.js --f iife -c test/server/rollup.config.js",
+    "test:build": "rollup test/server/src/network-stubs.js --o public/dist/network-stubs.js --f iife -c test/server/rollup.config.js && rollup test/server/src/timers.js --o public/dist/timers.js --f iife -c test/server/rollup.config.js",
     "test:serve": "node test/server/index.js",
     "test": "concurrently 'npm run test:serve' 'sleep 1 && nightwatch -c test/conf.nightwatch.js' --success first --kill-others"
   },
