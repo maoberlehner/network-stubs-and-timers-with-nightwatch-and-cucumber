@@ -24,10 +24,15 @@ Given(/^time traveling is enabled$/, () => {
 });
 
 Given(/^"(.*)" seconds have passed$/, (seconds) => {
+  client.pause(1000);
   client.execute(`clock.tick(${seconds} * 1000)`);
+  client.pause(1000);
 });
 
 Given(/^network stubs are enabled$/, () => {
+  client.setWindowPosition(665, 50);
+  client.resizeWindow(525, 760);
+
   const cookie = {
     name: IDENTIFIERS.network,
     value: `1`,
@@ -82,6 +87,7 @@ When(/^I (?:browse|open|visit).*? `(.*?)`$/, (pageName) => {
   // We have to refresh the page so
   // cookies are sent correctly.
   if (refresh) client.refresh();
+  client.pause(1000);
 });
 
 When(/^I click.*? (`.*`)$/, selectorChain => client.click(nestedSelector(selectorChain)));
